@@ -8,7 +8,9 @@ metadata:
       title: Support path
       icon: user
   annotations:
-    operate-first.cloud/logo-url: https://picsum.photos/200
+    operate-first.cloud/component-icon-url: https://picsum.photos/200
+    backstage.io/techdocs-ref: url:https://github.com/skopecky-test/example-service/tree/main
+    # TODO: add docs to readme on how to add docs
 spec:
   type: service
   lifecycle: production
