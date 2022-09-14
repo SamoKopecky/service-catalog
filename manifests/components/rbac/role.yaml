@@ -56,3 +56,11 @@ rules:
   - get
   - watch
   - list
+- apiGroups:
+  - cluster.open-cluster-management.io
+  resources:
+  - managedclusters
+  verbs:
+  - get
+  - watch
+  - list

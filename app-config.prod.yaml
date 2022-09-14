@@ -63,8 +63,6 @@ kubernetes:
           serviceAccountToken: ${moc_smaug_token}
           dashboardUrl: https://console-openshift-console.apps.smaug.na.operate-first.cloud
           dashboardApp: openshift
-    - type: 'config'
-      clusters:
         - url: https://api.moc-infra.massopen.cloud:6443
           name: infra
           authProvider: 'serviceAccount'
@@ -73,8 +71,6 @@ kubernetes:
           serviceAccountToken: ${moc_infra_token}
           dashboardUrl: https://console-openshift-console.apps.moc-infra.massopen.cloud
           dashboardApp: openshift
-    - type: 'config'
-      clusters:
         - url: https://api.curator.massopen.cloud:6443
           name: curator
           authProvider: 'serviceAccount'
@@ -83,8 +79,6 @@ kubernetes:
           serviceAccountToken: ${moc_curator_token}
           dashboardUrl: https://console-openshift-console.apps.curator.massopen.cloud
           dashboardApp: openshift
-    - type: 'config'
-      clusters:
         - url: https://api.balrog.aws.operate-first.cloud:6443
           name: balrog
           authProvider: 'serviceAccount'
@@ -93,8 +87,6 @@ kubernetes:
           serviceAccountToken: ${emea_balrog_token}
           dashboardUrl: https://console-openshift-console.apps.balrog.aws.operate-first.cloud
           dashboardApp: openshift
-    - type: 'config'
-      clusters:
         - url: https://api.odh-cl1.apps.os-climate.org:6443
           name: osc-cl1
           authProvider: 'serviceAccount'
@@ -103,8 +95,6 @@ kubernetes:
           serviceAccountToken: ${osc_osc-cl1_token}
           dashboardUrl: https://console-openshift-console.apps.odh-cl1.apps.os-climate.org
           dashboardApp: openshift
-    - type: 'config'
-      clusters:
         - url: https://api.odh-cl2.apps.os-climate.org:6443
           name: osc-cl2
           authProvider: 'serviceAccount'
@@ -113,3 +103,6 @@ kubernetes:
           serviceAccountToken: ${osc_osc-cl2_token}
           dashboardUrl: https://console-openshift-console.apps.odh-cl2.apps.os-climate.org
           dashboardApp: openshift
+
+clusterStatus:
+  acmCluster: 'infra'

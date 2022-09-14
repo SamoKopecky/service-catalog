@@ -29,10 +29,11 @@ import proxy from './plugins/proxy';
 import techdocs from './plugins/techdocs';
 import search from './plugins/search';
 import permission from './plugins/permission';
-import { PluginEnvironment } from './types';
-import { ServerPermissionClient } from '@backstage/plugin-permission-node';
 import badges from './plugins/badges';
 import kubernetes from './plugins/kubernetes';
+import clusterStatus from './plugins/cluster-status';
+import { PluginEnvironment } from './types';
+import { ServerPermissionClient } from '@backstage/plugin-permission-node';
 
 function makeCreateEnv(config: Config) {
   const root = getRootLogger();
@@ -86,6 +87,7 @@ async function main() {
   const permissionEnv = useHotMemoize(module, () => createEnv('permission'));
   const badgesEnv = useHotMemoize(module, () => createEnv('badges'));
   const kubernetesEnv = useHotMemoize(module, () => createEnv('kubernetes'));
+  const clusterStatusEnv = useHotMemoize(module, () => createEnv('cluster-status'));
 
   const apiRouter = Router();
   apiRouter.use('/catalog', await catalog(catalogEnv));
@@ -97,6 +99,7 @@ async function main() {
   apiRouter.use('/permission', await permission(permissionEnv));
   apiRouter.use('/badges', await badges(badgesEnv));
   apiRouter.use('/kubernetes', await kubernetes(kubernetesEnv));
+  apiRouter.use('/cluster-status', await clusterStatus(clusterStatusEnv));
 
   // Add backends ABOVE this line; this 404 handler is the catch-all fallback
   apiRouter.use(notFoundHandler());

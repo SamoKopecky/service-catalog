@@ -46,3 +46,6 @@ kubernetes:
           # Optional values
           # dashboardUrl: <dashboard_url>
           # dashboardApp: <dashboard_type>  # Supported dashboards: standard, rancher, openshift, gke, aks, eks
+
+clusterStatus:
+  acmCluster: 'dev-cluster'
