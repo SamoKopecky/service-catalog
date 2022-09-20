@@ -171,3 +171,5 @@ export const ClusterStatusPage = () => {
     </SearchContextProvider>
   );
 };
+
+export default ClusterStatusPage;

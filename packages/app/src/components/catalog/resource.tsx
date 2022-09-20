@@ -8,6 +8,13 @@ import {
   isTechDocsAvailable,
 } from '@backstage/plugin-techdocs';
 import OverviewWrapper from './shared/OverviewWrapper';
+import {
+  ClusterAllocatableResourceTable,
+  ClusterAvaliableResourceTable,
+  ClusterContextProvider,
+  ClusterInfoTable,
+  ClusterStatusCard,
+} from './shared/ClusterStatus';
 
 const resource = (
   <LayoutWrapper>
@@ -16,7 +23,24 @@ const resource = (
         <Grid item xs={12}>
           <EntitySwitch>
             <EntitySwitch.Case if={isType('cluster')}>
-              <p>Cluster Overview Goes Here</p>
+              <ClusterContextProvider>
+                <Grid container>
+                  <Grid container item direction="column" xs={3}>
+                    <Grid item>
+                      <ClusterStatusCard />
+                    </Grid>
+                    <Grid item>
+                      <ClusterAllocatableResourceTable />
+                    </Grid>
+                    <Grid item>
+                      <ClusterAvaliableResourceTable />
+                    </Grid>
+                  </Grid>
+                  <Grid item xs>
+                    <ClusterInfoTable />
+                  </Grid>
+                </Grid>
+              </ClusterContextProvider>
             </EntitySwitch.Case>
           </EntitySwitch>
         </Grid>
