@@ -1,7 +1,7 @@
 .git
 node_modules
 packages/*/node_modules
-plugins
+plugins/*/node_modules
 manifests
 dist-types
 .aicoe-ci.yaml

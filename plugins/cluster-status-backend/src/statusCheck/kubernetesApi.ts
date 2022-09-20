@@ -3,16 +3,16 @@ import { CustomObjectsApi, KubeConfig } from "@kubernetes/client-node"
 import { Logger } from 'winston';
 
 export const getCustomObjectsApi = (clusterConfig: Config, logger: Logger): CustomObjectsApi => {
-  const clusterToken = clusterConfig.getOptionalString('serviceAccountToken')
+  const clusterToken = clusterConfig.getOptionalString('serviceAccountToken');
   const kubeConfig = new KubeConfig();
 
   if (!clusterToken) {
-    logger.info('Using default kubernetes config')
+    logger.info('Using default kubernetes config');
     kubeConfig.loadFromDefault();
-    return kubeConfig.makeApiClient(CustomObjectsApi)
+    return kubeConfig.makeApiClient(CustomObjectsApi);
   }
 
-  logger.info('Loading kubernetes config from config file')
+  logger.info('Loading kubernetes config from config file');
   const cluster = {
     name: clusterConfig.getString('name'),
     server: clusterConfig.getString('url'),
@@ -37,5 +37,5 @@ export const getCustomObjectsApi = (clusterConfig: Config, logger: Logger): Cust
     contexts: [context],
     currentContext: context.name,
   });
-  return kubeConfig.makeApiClient(CustomObjectsApi)
+  return kubeConfig.makeApiClient(CustomObjectsApi);
 }

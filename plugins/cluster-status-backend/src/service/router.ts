@@ -33,28 +33,27 @@ export async function createRouter(
   const { logger } = options;
   const { config } = options;
 
-  const unavaliableCluster: ClusterDetails = {
+  const unavailableCluster: ClusterDetails = {
     status: {
-      avaliable: false,
+      available: false,
       reason: 'ACM cluster unreachable'
     }
   }
 
-  const statusCheck = new StatusCheck(config, logger)
+  const statusCheck = new StatusCheck(config, logger);
 
   const router = Router();
   router.use(express.json());
 
-  router.get('/status/:clusterName', (request, response) => {
-    const clusterName = request.params.clusterName
+  router.get('/status/:clusterName', ({ params: { clusterName }}, response) => {
     logger.info(`Incoming status request for ${clusterName} cluster`)
     statusCheck.getClusterStatus(clusterName)
       .then((resp) => {
         response.send(statusCheck.parseStatusCheck(resp.body))
       })
       .catch((resp) => {
-        logger.warn(resp)
-        response.send(unavaliableCluster);
+        logger.warn(resp);
+        response.send(unavailableCluster);
       })
   });
 
@@ -69,8 +68,8 @@ export async function createRouter(
         response.send(parsedClusters)
       })
       .catch((resp) => {
-        logger.warn(resp)
-        response.send([unavaliableCluster])
+        logger.warn(resp);
+        response.send([unavailableCluster]);
       })
   });
   router.use(errorHandler());

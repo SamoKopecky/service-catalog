@@ -6,16 +6,16 @@ import { getCustomObjectsApi } from "./kubernetesApi";
 
 export class StatusCheck {
   acmCluster: string;
-  logger: Logger
-  config: Config
-  api: CustomObjectsApi
+  logger: Logger;
+  config: Config;
+  api: CustomObjectsApi;
 
 
   constructor(config: Config, logger: Logger) {
-    this.logger = logger
-    this.config = config
-    this.acmCluster = this.config.getString('clusterStatus.acmCluster')
-    this.api = getCustomObjectsApi(this.getAcmClusterFromConfig(), this.logger)
+    this.logger = logger;
+    this.config = config;
+    this.acmCluster = this.config.getString('clusterStatus.acmCluster');
+    this.api = getCustomObjectsApi(this.getAcmClusterFromConfig(), this.logger);
   }
 
   public getAllClustersStatus = (): Promise<any> => (
@@ -26,9 +26,9 @@ export class StatusCheck {
   public getClusterStatus = (clusterName: string): Promise<any> => {
     this.checkClusterNames(clusterName);
 
-    let fixedClusterName = clusterName
+    let fixedClusterName = clusterName;
     if (clusterName === this.acmCluster) {
-      fixedClusterName = 'local-cluster'
+      fixedClusterName = 'local-cluster';
     }
 
     return this.getManagedClusterViaApi(fixedClusterName);
@@ -36,29 +36,32 @@ export class StatusCheck {
 
   public parseStatusCheck = (managedCluster: any): ClusterDetails => {
     const clusterStatus: any = managedCluster.status
-    const avaliable = clusterStatus.conditions.find(
+    const available = clusterStatus.conditions.find(
       (value: any) => (value.type === 'ManagedClusterConditionAvailable')
-    ).status.toLowerCase() === 'true' ? true : false
+    ).status.toLowerCase() === 'true' ? true : false;
 
     const defaultStatus: ClusterDetails = {
       name: managedCluster.metadata.name,
       status: {
-        avaliable: avaliable,
-        reason: 'Cluster is up'
+        available: available,
+        reason: 'Cluster is up',
       }
     }
 
-    if (!avaliable) {
-      defaultStatus.status.reason = 'Cluster is down'
+    if (!available) {
+      defaultStatus.status.reason = 'Cluster is down';
       return defaultStatus;
     }
 
-    const clusterClaims = clusterStatus.clusterClaims
-    const allocatable = clusterStatus.allocatable
-    const capacity = clusterStatus.capacity
+    const clusterClaims = clusterStatus.clusterClaims;
+    const allocatable = clusterStatus.allocatable;
+    const capacity = clusterStatus.capacity;
     const parsedClusterInfo = {
-      openshiftVersion: this.getClaim(clusterClaims, 'version.openshift.io'),
+      consoleUrl: this.getClaim(clusterClaims, 'consoleurl.cluster.open-cluster-management.io',),
       kubernetesVersion: this.getClaim(clusterClaims, 'kubeversion.open-cluster-management.io'),
+      oauthUrl: this.getClaim(clusterClaims, 'oauthredirecturis.openshift.io'),
+      openshiftId: this.getClaim(clusterClaims, 'id.openshift.io'),
+      openshiftVersion: this.getClaim(clusterClaims, 'version.openshift.io'),
       platform: this.getClaim(clusterClaims, 'platform.open-cluster-management.io'),
       region: this.getClaim(clusterClaims, 'region.open-cluster-management.io'),
       allocatableResources: {
@@ -66,7 +69,7 @@ export class StatusCheck {
         memorySize: allocatable.memory,
         numberOfPods: allocatable.pods,
       },
-      avaliableResources: {
+      availableResources: {
         cpuCores: capacity.cpu,
         memorySize: capacity.memory,
         numberOfPods: capacity.pods,
@@ -75,7 +78,7 @@ export class StatusCheck {
 
     return {
       ...defaultStatus,
-      ...parsedClusterInfo
+      ...parsedClusterInfo,
     }
   }
 
@@ -99,8 +102,8 @@ export class StatusCheck {
       value.getString('name') === this.acmCluster
     ));
     if (filteredClusters.length !== 1) {
-      this.logger.error(`found number of ACM clusters (${filteredClusters.length}) other then 1`)
-      throw new Error()
+      this.logger.error(`found number of ACM clusters (${filteredClusters.length}) other than 1`);
+      throw new Error();
     }
     return filteredClusters[0];
   }
@@ -110,7 +113,7 @@ export class StatusCheck {
     if (clusters.some((value) => (
       value.getString('name') !== clusterName
     ))) {
-      throw new Error(`${clusterName} cluster is not contained in the config file`)
+      throw new Error(`${clusterName} cluster is not contained in the config file`);
     }
   }
 
@@ -119,7 +122,7 @@ export class StatusCheck {
       .map((value) => {
         const configType = value.getString('type')
         if (configType !== 'config') {
-          this.logger.warn(`${configType} is not a supported configuration type`)
+          this.logger.warn(`${configType} is not a supported configuration type`);
           return [];
         }
         return value.getConfigArray('clusters');

@@ -1,21 +1,24 @@
 export interface ClusterDetails {
-  name?: string,
-  openshiftVersion?: string,
+  consoleUrl?: string,
   kubernetesVersion?: string,
+  name?: string,
+  oauthUrl?: string
+  openshiftId?: string
+  openshiftVersion?: string,
   platform?: string,
   region?: string,
-  status: {
-    avaliable: boolean,
-    reason: string,
-  }
   allocatableResources?: {
     cpuCores: number,
     memorySize: string,
     numberOfPods: number,
   }
-  avaliableResources?: {
+  availableResources?: {
     cpuCores: number,
     memorySize: string,
     numberOfPods: number,
+  }
+  status: {
+    available: boolean,
+    reason: string,
   }
 }
