@@ -58,7 +58,9 @@ For local development with the kubernetes plugin, kubectl proxy is by default st
 
 ### Run in a Kubernetes cluster
 
-Configurations for the cluster dev setup are in `app-config.dev.yaml`.
+Configurations for the cluster dev setup are in `app-config.dev.yaml`. Make sure to edit the `.app.baseUrl`, `.backend.baseUrl` and `.backend.cors.origin` urls to the address backstage will be hosted on.
+
+Some plugins require secrets to function, they can configured in the `manifests/overlays/dev/secret.yaml` file.
 
 1. Update the image repository URL with your image repository:
 

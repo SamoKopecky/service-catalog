@@ -22,6 +22,11 @@ patches:
       - op: add
         path: /spec/template/spec/containers/0/envFrom/-
         value:
+          secretRef:
+            name: service-catalog-k8s-plugin-tokens
+      - op: add
+        path: /spec/template/spec/containers/0/envFrom/-
+        value:
           configMapRef:
             name: service-catalog-bucket-claim
     target:

@@ -28,8 +28,6 @@ spec:
           envFrom:
             - secretRef:
                 name: service-catalog-pguser-service-catalog
-            - secretRef:
-                name: service-catalog-k8s-plugin-tokens
           env:
             - name: NODE_ENV
             - name: BACKEND_SECRET
