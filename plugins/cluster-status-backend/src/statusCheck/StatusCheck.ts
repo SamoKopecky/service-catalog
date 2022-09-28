@@ -5,6 +5,8 @@ import { Logger } from 'winston';
 import { getCustomObjectsApi } from "./kubernetesApi";
 
 export class StatusCheck {
+  readonly ACM_CLUSTER_CONFIG = 'clusterStatus.acmCluster';
+
   acmCluster: string;
   logger: Logger;
   config: Config;
@@ -14,7 +16,7 @@ export class StatusCheck {
   constructor(config: Config, logger: Logger) {
     this.logger = logger;
     this.config = config;
-    this.acmCluster = this.config.getString('clusterStatus.acmCluster');
+    this.acmCluster = this.config.getString(this.ACM_CLUSTER_CONFIG);
     this.api = getCustomObjectsApi(this.getAcmClusterFromConfig(), this.logger);
   }
 
@@ -46,6 +48,10 @@ export class StatusCheck {
         available: available,
         reason: 'Cluster is up',
       }
+    }
+
+    if (defaultStatus.name === 'local-cluster') {
+      defaultStatus.name = this.config.getString(this.ACM_CLUSTER_CONFIG)
     }
 
     if (!available) {
@@ -88,7 +94,9 @@ export class StatusCheck {
       'v1',
       'managedclusters',
       clusterName,
-    )
+    ).catch(r => {
+      this.logger.error(JSON.stringify(r.body))
+    })
   )
 
   private getClaim = (clusterClaims: any[], claimName: string): string => (

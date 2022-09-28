@@ -34,6 +34,7 @@ import { PermissionedRoute } from '@backstage/plugin-permission-react';
 import { catalogEntityCreatePermission } from '@backstage/plugin-catalog-common/alpha';
 import { HomepageCompositionRoot } from '@backstage/plugin-home';
 import { HomePage } from './components/home/HomePage';
+import { ClusterStatusPage } from './components/clusterStatusPage/ClusterStatusPage';
 
 import { badgesPlugin } from '@backstage/plugin-badges'
 import { grafanaPlugin } from '@k-phoen/backstage-plugin-grafana';
@@ -65,6 +66,9 @@ const routes = (
   <FlatRoutes>
     <Route path="/" element={<HomepageCompositionRoot />}>
       <HomePage />
+    </Route>
+    <Route path="/clusterStatusPage">
+      <ClusterStatusPage />
     </Route>
     <Route path="/catalog" element={<CatalogIndexPage />} />
     <Route
