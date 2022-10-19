@@ -22,3 +22,21 @@ export interface ClusterDetails {
     reason: string,
   }
 }
+
+export interface ClusterError {
+  error: {
+    name: string,
+    type?: string,
+    message: string,
+    level?: string,
+    service?: string,
+    stack?: string,
+  },
+  request?: {
+    method?: string,
+    url?: string,
+  },
+  response: {
+    statusCode: number
+  }
+}

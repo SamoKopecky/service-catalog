@@ -3,6 +3,8 @@ import { ClusterDetails } from "../types/types";
 import { CustomObjectsApi } from "@kubernetes/client-node"
 import { Logger } from 'winston';
 import { getCustomObjectsApi } from "./kubernetesApi";
+import { ClusterNotFound } from "../exceptions/ClusterNotFound";
+import { ServerConfigurationError } from "../exceptions/ServerConfigurationError";
 
 export class StatusCheck {
   readonly ACM_CLUSTER_CONFIG = 'clusterStatus.acmCluster';
@@ -101,9 +103,7 @@ export class StatusCheck {
       'v1',
       'managedclusters',
       clusterName,
-    ).catch(r => {
-      this.logger.error(JSON.stringify(r.body))
-    })
+    )
   )
 
   private getClaim = (clusterClaims: any[], claimName: string): string => (
@@ -117,8 +117,11 @@ export class StatusCheck {
       value.getString('name') === this.acmCluster
     ));
     if (filteredClusters.length !== 1) {
-      this.logger.error(`found number of ACM clusters (${filteredClusters.length}) other than 1`);
-      throw new Error();
+      throw new ServerConfigurationError(
+        `ACM cluster name wongly configured`,
+        `the number of configured ACM clusters in the config file is
+         (${filteredClusters.length}) other than 1 , please contact the administrator`,
+      );
     }
     return filteredClusters[0];
   }
@@ -128,7 +131,10 @@ export class StatusCheck {
     if (!clusters.some((value) => (
       value.getString('name') === clusterName
     ))) {
-      throw new Error(`${clusterName} cluster is not contained in the config file`);
+      throw new ClusterNotFound(
+        `${clusterName} cluster not found`,
+        `${clusterName} cluster is probably not contained in the config file`,
+      );
     }
   }
 
