@@ -6,8 +6,6 @@ import {
   InfoCard,
   WarningPanel,
   CodeSnippet,
-  StatusOK,
-  StatusError,
 } from '@backstage/core-components';
 import {
   CircularProgress,
@@ -21,12 +19,13 @@ import useAsyncFn from 'react-use/lib/useAsyncFn';
 import useDebounce from 'react-use/lib/useDebounce';
 import { configApiRef, useApi } from '@backstage/core-plugin-api';
 import { Entity } from '@backstage/catalog-model';
-import { getClusters } from '../../clusterClient';
+import { isError, getClusters, getStatusElement } from '../../clusterClient';
 import { HomePageCompanyLogo } from '@backstage/plugin-home';
 import Logo from '../Logo/Logo';
+import { ClusterDetails, ClusterError } from '@internal/plugin-cluster-status-backend';
 
 interface clusterEntity {
-  status: boolean,
+  cluster: ClusterDetails,
   entity: Entity
 }
 
@@ -83,6 +82,10 @@ const CatalogClusters = () => {
     async () => {
       const response = await catalogApi.getEntities();
       const clusters = await getClusters(configApi)
+      if (isError(clusters)) {
+        const clusterError: ClusterError = (clusters as unknown as ClusterError)
+        throw new Error(`Error from the backende API: ${clusterError.response.statusCode} ${clusterError.error.name}`)
+      }
 
       const clusterResourceEntities = response.items.filter(
         e => (
@@ -96,8 +99,7 @@ const CatalogClusters = () => {
           cd.name === entity.metadata.name
         ))
         return {
-          // !! --> converts object to boolean
-          status: !!cluster?.status.available!,
+          cluster: cluster!,
           entity: entity,
         }
       }));
@@ -109,7 +111,7 @@ const CatalogClusters = () => {
 
   if (error) {
     return (
-      <WarningPanel severity="error" title="Could not fetch catalog entities.">
+      <WarningPanel severity="error" title="Could not fetch clusters.">
         <CodeSnippet language="text" text={error.toString()} />
       </WarningPanel>
     );
@@ -128,7 +130,7 @@ const CatalogClusters = () => {
               className={classes.root}
               title={
                 <div className={classes.subheader}>
-                  {clusterEntity.status === true ? <StatusOK /> : <StatusError />}
+                  {getStatusElement(clusterEntity.cluster)}
                   {clusterEntity.entity.metadata.title || clusterEntity.entity.metadata.name}
                 </div>
               }
