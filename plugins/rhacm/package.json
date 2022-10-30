@@ -26,6 +26,7 @@
     "@backstage/catalog-model": "1.1.2",
     "@backstage/core-components": "^0.11.2",
     "@backstage/core-plugin-api": "^1.0.7",
+    "@backstage/errors": "^1.1.2",
     "@backstage/plugin-catalog-react": "1.2.0",
     "@backstage/plugin-home": "0.4.26",
     "@backstage/plugin-search-react": "1.2.0",

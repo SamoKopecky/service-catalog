@@ -9,23 +9,23 @@ import {
 } from '@backstage/core-components';
 
 import { useCluster } from '../ClusterContext';
+import { ClusterDetails } from '@internal/backstage-plugin-rhacm-common';
+import { ErrorResponseBody } from '@backstage/errors';
 
 export const ClusterStatusCard = (): any => {
   const { data, loading, error } = useCluster();
-  let reason = data.status.reason;
 
   if (error) {
-    data.status.reason = 'Unavailable';
+    const status: ClusterDetails = {
+      status: {
+        available: false,
+        reason: (data as unknown as ErrorResponseBody).error.name,
+      },
+    };
+    Object.assign(data, status);
   } else if (loading) {
-    /*
-    Can't do data.status.reason = 'Loading' since the value
-    will not be overwritten by the state update of the cluster (dunno why)
-    */
-    reason = 'Loading';
+    data.status.reason = 'Loading';
   }
-
-  const down =
-    data.status.available && data.status.reason === 'Cluster is down';
 
   return (
     <InfoCard title="Status" divider={false}>
@@ -33,13 +33,13 @@ export const ClusterStatusCard = (): any => {
         <Typography variant="h1">
           {data.status.available ? (
             <StatusOK />
-          ) : down ? (
+          ) : !data.status.available && data.status.reason === 'Cluster is down' ? (
             <StatusError />
           ) : (
             <StatusAborted />
           )}
         </Typography>
-        <Typography variant="subtitle1">{reason}</Typography>
+        <Typography variant="subtitle1">{data.status.reason}</Typography>
       </div>
     </InfoCard>
   );

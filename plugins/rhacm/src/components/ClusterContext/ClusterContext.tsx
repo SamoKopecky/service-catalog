@@ -38,7 +38,7 @@ export const ClusterContextProvider = (props: any) => {
   Error can either be undefined or Error(), if its undefined, no error happended
   if cluster has some 'error' key, it means the API sent back an error response
   */
-  if (error instanceof Error || 'error' in cluster) {
+  if (error || 'error' in cluster) {
     errorBool = true;
   }
 

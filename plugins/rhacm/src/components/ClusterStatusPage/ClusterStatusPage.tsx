@@ -23,6 +23,7 @@ import { configApiRef, useApi } from '@backstage/core-plugin-api';
 import { Entity } from '@backstage/catalog-model';
 import { getClusters } from '../../helpers/apiClient';
 import { HomePageCompanyLogo } from '@backstage/plugin-home';
+import { ErrorResponseBody } from '@backstage/errors'
 
 interface clusterEntity {
   status: boolean,
@@ -90,6 +91,11 @@ const CatalogClusters = () => {
         )
       );
 
+      if ('error' in clusters) {
+        // Didn't find a better way to do this
+        throw new Error((clusters as unknown as ErrorResponseBody).error.name)
+      }
+
       setClusterEntities(clusterResourceEntities.map(entity => {
         const cluster = clusters.find(cd => (
           cd.name === entity.metadata.name
@@ -107,7 +113,7 @@ const CatalogClusters = () => {
 
   if (error) {
     return (
-      <WarningPanel severity="error" title="Could not fetch catalog entities.">
+      <WarningPanel severity="error" title="Could not fetch clusters from ACM.">
         <CodeSnippet language="text" text={error.toString()} />
       </WarningPanel>
     );
@@ -138,7 +144,7 @@ const CatalogClusters = () => {
   );
 };
 
-export const ClusterStatusPage = ({ logo } : { logo?: React.ReactNode}) => {
+export const ClusterStatusPage = ({ logo }: { logo?: React.ReactNode }) => {
   const { container, typography } = useStyles();
 
   return (
