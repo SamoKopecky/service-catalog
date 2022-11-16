@@ -2,28 +2,27 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: service-catalog
 resources:
-  - ../../base
+- ../../base
 components:
-  - ../../components/postgres-db
-  - ../../components/rbac
+- ../../components/postgres-db
+- ../../components/rbac
 patches:
-  - patch: |
-      - op: add
-        path: /spec/template/spec/containers/0/args/-
-        value: app-config.dev.yaml
-      - op: add
-        path: /spec/template/spec/containers/0/env/0/value
-        value: development
-      - op: add
-        path: /spec/template/spec/serviceAccountName
-        value: service-catalog-k8s-plugin
-    target:
-      kind: Deployment
-      name: service-catalog
+- patch: |
+    - op: add
+      path: /spec/template/spec/containers/0/args/-
+      value: app-config.dev.yaml
+    - op: add
+      path: /spec/template/spec/containers/0/env/0/value
+      value: development
+    - op: add
+      path: /spec/template/spec/serviceAccountName
+      value: service-catalog-k8s-plugin
+  target:
+    kind: Deployment
+    name: service-catalog
 patchesStrategicMerge:
-  - route.yaml
-  - secret.yaml
+- route.yaml
+- secret.yaml
 images:
-  - name: quay.io/operate-first/service-catalog
-    newName:
-    newTag:
+- name: quay.io/operate-first/service-catalog
+  newName: quay.io/skopecky/backstage

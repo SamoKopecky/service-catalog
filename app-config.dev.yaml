@@ -1,10 +1,10 @@
 # Used in dev setup on a k8s/openshift cluster
 
 app:
-  baseUrl: <url>
+  baseUrl: https://service-catalog-service-catalog.apps.skopecky.dev.datahub.redhat.com
 
 backend:
-  baseUrl: <url>
+  baseUrl: https://service-catalog-service-catalog.apps.skopecky.dev.datahub.redhat.com
   database:
     client: pg
     connection:
@@ -19,7 +19,7 @@ backend:
         ca:
           $file: /mnt/certs/ca.crt
   cors:
-    origin: <url>
+    origin: https://service-catalog-service-catalog.apps.skopecky.dev.datahub.redhat.com
 
 catalog:
   locations:
