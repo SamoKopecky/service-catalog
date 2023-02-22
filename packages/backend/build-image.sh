@@ -15,7 +15,7 @@ tmp_dir=$(mktemp -d -t service-catalog-XXXXXXXXXX)
 
 
 echo "---> Run s2i build"
-s2i build . ${NODEJS_BASE_IMAGE} --as-dockerfile ${tmp_dir}/Containerfile
+s2i build -c . ${NODEJS_BASE_IMAGE} --as-dockerfile ${tmp_dir}/Containerfile
 cd $tmp_dir
 
 echo "---> Create image"

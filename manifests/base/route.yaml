@@ -1,10 +1,13 @@
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
-  name: service-catalog
+  name: backstage-keycloack
 spec:
   port:
     targetPort: 7007
   to:
     kind: Service
-    name: service-catalog
+    name: backstage-keycloack
+  tls:
+    termination: edge
+  wildcardPolicy: None

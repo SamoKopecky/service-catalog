@@ -2,7 +2,7 @@
 
 app:
   title: Operate First Cloud
-  baseUrl: http://localhost:7007
+  baseUrl: https://backstage-backstage.apps.devskopecky.dev.datahub.redhat.com
   support:
     url: https://github.com/operate-first/support/issues
     items:  # Used by common SupportButton component
@@ -26,9 +26,10 @@ backend:
   # information on the format
   auth:
     keys:
-      - secret: ${BACKEND_SECRET}
-  baseUrl: http://localhost:7007
-  listen: 0.0.0.0:7007
+      - secret: abc
+  baseUrl: https://backstage-backstage.apps.devskopecky.dev.datahub.redhat.com
+  listen:
+    port: 7007
   # Content-Security-Policy directives follow the Helmet format: https://helmetjs.github.io/#reference
   # Default Helmet Content-Security-Policy values can be removed by setting the key to false
   csp:
@@ -36,9 +37,12 @@ backend:
     img-src: ["'self'", "https:", "data:"]
     default-src: ["'self'", "https:"]
   cors:
-    origin: http://localhost:7007
+    origin: https://backstage-backstage.apps.devskopecky.dev.datahub.redhat.com
     methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
     credentials: true
+  database:
+    client: better-sqlite3
+    connection: ":memory:"
   # This is for local developement only, it is not recommended to use this in production
   # The production database configuration is stored in app-config.production.yaml
   cache:
@@ -98,3 +102,30 @@ catalog:
 
 permission:
   enabled: true
+
+auth:
+  providers:
+    oauth2Proxy: {}
+
+kubernetes:
+  serviceLocatorMethod:
+    type: "multiTenant"
+  clusterLocatorMethods:
+    - type: "config"
+      clusters:
+        - url: https://api.devskopecky.dev.datahub.redhat.com:6443
+          name: infra
+          # authProvider: "serviceAccount"
+          # serviceAccountToken: ${moc_infra_token}
+          authProvider: oidc
+          oidcTokenProvider: oauth2Proxy
+          skipTLSVerify: false
+          skipMetricsLookup: false
+
+webTerminal:
+  webSocketUrl: "wss://example.com:3000"
+
+ocm:
+  cluster: infra
+
+searchInitialDelay: 5

@@ -3,4 +3,4 @@
 
 set -e
 echo "--> Running app with production configuration"
-node packages/backend --config app-config.yaml --config app-config.prod.yaml
+node packages/backend --config app-config.yaml
