@@ -1,0 +1,8 @@
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: skopecky@redhat.com
+spec:
+  profile:
+    email: skopecky@redhat.com
+  memberOf: [group1]

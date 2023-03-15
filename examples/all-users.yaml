@@ -6,3 +6,4 @@ metadata:
 spec:
   targets:
     - ./users/user1.yaml
+    - ./users/user2.yaml

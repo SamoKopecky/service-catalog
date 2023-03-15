@@ -2,7 +2,7 @@
 
 app:
   title: Operate First Cloud
-  baseUrl: https://backstage-backstage.apps.devskopecky.dev.datahub.redhat.com
+  baseUrl: http://localhost:3000
   support:
     url: https://github.com/operate-first/support/issues
     items:  # Used by common SupportButton component
@@ -27,7 +27,7 @@ backend:
   auth:
     keys:
       - secret: abc
-  baseUrl: https://backstage-backstage.apps.devskopecky.dev.datahub.redhat.com
+  baseUrl: http://localhost:7007
   listen:
     port: 7007
   # Content-Security-Policy directives follow the Helmet format: https://helmetjs.github.io/#reference
@@ -37,7 +37,7 @@ backend:
     img-src: ["'self'", "https:", "data:"]
     default-src: ["'self'", "https:"]
   cors:
-    origin: https://backstage-backstage.apps.devskopecky.dev.datahub.redhat.com
+    origin: http://localhost:3000
     methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
     credentials: true
   database:
@@ -99,13 +99,28 @@ catalog:
         - Domain
         - Api
         - Resource
+  locations:
+    - type: file
+      target: ../../examples/all.yaml
+  providers:
+    keycloakOrg:
+      default:
+        baseUrl: https://keycloak-keycloack.apps.devskopecky.dev.datahub.redhat.com
+        loginRealm: master
+        realm: master
+        clientId: backstage
+        clientSecret: PriGUScaQ2nHYdZhLXzcD7esq5WwtDS7
 
 permission:
   enabled: true
 
 auth:
+  environment: development
   providers:
-    oauth2Proxy: {}
+    google:
+      development:
+        clientId: ${AUTH_GOOGLE_CLIENT_ID}
+        clientSecret: ${AUTH_GOOGLE_CLIENT_SECRET}
 
 kubernetes:
   serviceLocatorMethod:
@@ -113,13 +128,13 @@ kubernetes:
   clusterLocatorMethods:
     - type: "config"
       clusters:
-        - url: https://api.devskopecky.dev.datahub.redhat.com:6443
+        - url: http://localhost:6443
           name: infra
           # authProvider: "serviceAccount"
           # serviceAccountToken: ${moc_infra_token}
           authProvider: oidc
-          oidcTokenProvider: oauth2Proxy
-          skipTLSVerify: false
+          oidcTokenProvider: google
+          skipTLSVerify: true
           skipMetricsLookup: false
 
 webTerminal:

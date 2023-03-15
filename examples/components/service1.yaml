@@ -9,6 +9,7 @@ metadata:
       icon: user
   annotations:
     operate-first.cloud/logo-url: https://picsum.photos/200
+    backstage.io/kubernetes-label-selector: "app.kubernetes.io/name=backstage"
 spec:
   type: service
   lifecycle: production

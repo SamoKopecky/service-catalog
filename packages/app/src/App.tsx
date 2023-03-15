@@ -24,7 +24,7 @@ import { Root } from './components/Root';
 import {
   AlertDisplay,
   OAuthRequestDialog,
-  ProxiedSignInPage,
+  SignInPage,
 } from '@backstage/core-components';
 import { createApp } from '@backstage/app-defaults';
 import { AppRouter, FlatRoutes } from '@backstage/core-app-api';
@@ -37,12 +37,27 @@ import { grafanaPlugin } from '@k-phoen/backstage-plugin-grafana';
 import { OcmPage } from '@janus-idp/backstage-plugin-ocm';
 import { Logo } from './components/Logo/Logo';
 import { themes } from './themes';
+import { googleAuthApiRef } from '@backstage/core-plugin-api';
 
 const app = createApp({
   apis,
+  // components: {
+  //   SignInPage: props => (
+  //     <ProxiedSignInPage {...props} provider="oauth2Proxy" />
+  //   ),
+  // },
   components: {
     SignInPage: props => (
-      <ProxiedSignInPage {...props} provider="oauth2Proxy" />
+      <SignInPage
+        {...props}
+        auto
+        provider={{
+          id: 'google-auth-provider',
+          title: 'Google',
+          message: 'Sign in using Google',
+          apiRef: googleAuthApiRef,
+        }}
+      />
     ),
   },
   plugins: [badgesPlugin, grafanaPlugin],

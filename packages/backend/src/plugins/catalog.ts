@@ -10,6 +10,7 @@ import { ScaffolderEntitiesProcessor } from '@backstage/plugin-scaffolder-backen
 import { ManagedClusterProvider } from '@janus-idp/backstage-plugin-ocm-backend';
 import { Router } from 'express';
 import { PluginEnvironment } from '../types';
+import { KeycloakOrgEntityProvider } from '@janus-idp/backstage-plugin-keycloak-backend';
 
 class OpenshiftResourceProcessor implements CatalogProcessor {
   getProcessorName(): string {
@@ -49,6 +50,17 @@ export default async function createPlugin(
   });
   builder.addProcessor(new ScaffolderEntitiesProcessor());
   builder.addEntityProvider(ocm);
+  builder.addEntityProvider(
+    KeycloakOrgEntityProvider.fromConfig(env.config, {
+      id: 'development',
+      logger: env.logger,
+      schedule: env.scheduler.createScheduledTaskRunner({
+        frequency: { minutes: 1 },
+        timeout: { minutes: 2 },
+        initialDelay: { seconds: 15 },
+      }),
+    }),
+  );
   builder.addProcessor(new OpenshiftResourceProcessor());
   const { processingEngine, router } = await builder.build();
   await processingEngine.start();

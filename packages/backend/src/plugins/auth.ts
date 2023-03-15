@@ -39,10 +39,13 @@ export default async function createPlugin(
           },
         },
       }),
-      oauth2Proxy: providers.oauth2Proxy.create({
+      google: providers.google.create({
         signIn: {
           async resolver({ result }, ctx) {
-            const name = result.getHeader('x-forwarded-preferred-username');
+            const name = result.fullProfile.emails![0].value;
+            console.log(result.accessToken);
+            console.log(result.fullProfile.id);
+
             if (!name) {
               throw new Error('Request did not contain a user');
             }

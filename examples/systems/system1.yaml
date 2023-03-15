@@ -3,5 +3,7 @@ kind: System
 metadata:
   name: system1
   description: system1 description
+  annotations:
+    backstage.io/kubernetes-label-selector: "app.kubernetes.io/name=service-catalog"
 spec:
   owner: group1
